@@ -2,34 +2,33 @@ const fs = require("fs");
 const {BlobServiceClient } = require("@azure/storage-blob");
 
 function upload() {
-    //Upload file to blob
     try {
-        await blockBlobClient.uploadStream(fs.createReadStream(localFilePath), 4 * 1024 * 1024, 20, {
-          abortSignal: AbortController.timeout(30 * 60 * 1000), // Abort uploading with timeout in 30mins
-          onProgress: (ev) => console.log(ev)
-        });
-        console.log("uploadStream succeeds");
-      } catch (err) {
-        console.log(
-          `uploadStream failed, requestId - ${err.details.requestId}, statusCode - ${err.statusCode}, errorCode - ${err.details.errorCode}`
-        );
-      }
-    
-      const fileSize = fs.statSync(localFilePath).size;
-      const buffer = Buffer.alloc(fileSize);
-      try {
-        await blockBlobClient.downloadToBuffer(buffer, 0, undefined, {
-          abortSignal: AbortController.timeout(30 * 60 * 1000), // Abort uploading with timeout in 30mins
-          blockSize: 4 * 1024 * 1024, // 4MB block size
-          concurrency: 20, // 20 concurrency
-          onProgress: (ev) => console.log(ev)
-        });
-        console.log("downloadToBuffer succeeds");
-      } catch (err) {
-        console.log(
-          `downloadToBuffer failed, requestId - ${err.details.requestId}, statusCode - ${err.statusCode}, errorCode - ${err.details.errorCode}`
-        );
-      }    
+        //setup clients, credentials
+        const pipeline = newPipeline(new AnonymousCredential(), {
+            retryOptions: { maxTries: 4 }, 
+            userAgentOptions: { userAgentPrefix: "AdvancedSample V1.0.0" }, 
+            keepAliveOptions: {
+                enable: false
+            }
+            });
+        
+        const blobServiceClient = new BlobServiceClient(
+        `https://${account}.blob.core.windows.net${accountSas}`,
+        pipeline
+        );        
+        const containerClient = blobServiceClient.getContainerClient(containerName);
+        const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+        //upload file
+        await blockBlobClient.uploadFile(localFilePath, {
+        blockSize: 4 * 1024 * 1024, // 4MB block size
+        concurrency: 20, // 20 concurrency
+        onProgress: (ev) => console.log(ev)
+      });
+    } catch (err) {
+      console.log(
+        `uploadFile failed, requestId - ${err.details.requestId}, statusCode - ${err.statusCode}, errorCode - ${err.details.errorCode}`
+      );
+    }
     var element = document.getElementById("upmsg");
     element.innerHTML = "The file has been uploaded successfully. Click \"next step\" to continue.";
   }
