@@ -1,24 +1,11 @@
-const {BlobServiceClient } = require("@azure/storage-blob");
+const {cloud } = require("miniapp-sdk");
 
 function upload() {
     try {
-        //setup clients, credentials
-        const pipeline = newPipeline(new AnonymousCredential(), {
-            retryOptions: { maxTries: 4 }, 
-            userAgentOptions: { userAgentPrefix: "AdvancedSample V1.0.0" }, 
-            keepAliveOptions: {
-                enable: false
-            }
-            });
-        
-        const blobServiceClient = new BlobServiceClient(
-        `https://${account}.blob.core.windows.net${accountSas}`,
-        pipeline
-        );        
-        const containerClient = blobServiceClient.getContainerClient(containerName);
-        const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+        //init
+        cloud.init();
         //upload file
-        await blockBlobClient.uploadFile(localFilePath, {
+        await cloud.uploadFile(localFilePath, {
         blockSize: 4 * 1024 * 1024, // 4MB block size
         concurrency: 20, // 20 concurrency
         onProgress: (ev) => console.log(ev)
