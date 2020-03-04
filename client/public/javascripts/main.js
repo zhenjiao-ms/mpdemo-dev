@@ -1,3 +1,6 @@
+const fs = require("fs");
+const {BlobServiceClient } = require("@azure/storage-blob");
+
 function upload() {
     //Upload file to blob
     try {
