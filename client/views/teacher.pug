@@ -1,0 +1,15 @@
+extends layout
+
+
+block content
+  h1 Step 3: Teacher can see how many students has watched the video.
+  h2 Hello #{who}
+  div
+    p(id="resultmsg") 0 student has watched your video
+  div
+    button(id="refresh" onclick="refresh()") Click it to see how many students have completed
+  div
+    p(id="refreshmsg")
+  div
+    a(href="./student") Last step
+

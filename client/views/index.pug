@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 Step 1: Teacher uploads a video to students to watch.
+  h2 Hello #{who}
+  p 1. Select your video to students
+  form
+    input(type="file" id="file")|
+  p
+  button(id="upload" onclick="upload()") 2. Upload
+  div
+    p#upmsg
+  div
+    a(href="./student") Next Step

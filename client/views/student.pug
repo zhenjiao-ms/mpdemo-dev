@@ -1,0 +1,16 @@
+extends layout
+
+
+block content
+  h1 Step 2: The student gets the video. After watching it, clicks "I am done" to let teacher know.
+  h2 Hello #{who}
+  div
+    p 1. Watch the video from teacher and click "completed" button when it is done
+    video(src="sample.mp4" controls)
+  div
+    button(id="done" onclick="done()") 2. Click it to tell the teacher.
+  div
+    p(id="donemsg")
+  div
+    a(href="./teacher") Next Step
+
