@@ -1,4 +1,3 @@
-const fs = require("fs");
 const {BlobServiceClient } = require("@azure/storage-blob");
 
 function upload() {
